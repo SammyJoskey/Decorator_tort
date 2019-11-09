@@ -13,11 +13,10 @@ def time_this(num_runs=10):
             fn = func_to_run.__name__
             print("Среднее время выполнения %s за %s запусков: %.5f" % (fn, num_runs, avg))
         return func
-
     return decorator
 
 @time_this(num_runs=10)
 def f():
-    for j in range(1000000):
+    for i in range(1000000):
         pass
 f()
