@@ -1,24 +1,23 @@
 import time
 
-NUM_RUNS = 1000
+def time_this(num_runs=10):
+    def decorator(func_to_run):
+        def func(*args, **kwargs):
+            avg = 0
+            for _ in range(num_runs):
+                t0 = time.time()
+                func_to_run(*args, **kwargs)
+                t1 = time.time()
+                avg += (t1 - t0)
+            avg /= num_runs
+            fn = func_to_run.__name__
+            print("Среднее время выполнения %s за %s запусков: %.5f" % (fn, num_runs, avg))
+        return func
 
-class Timing:
-    def __init__(self, func, num_runs = 100):
-        self.start = 0
-        self.num_runs = num_runs
-        self.func = func
-    def __enter__(self):
-        self.start = time.time()
-        return self
-    def __exit__ (self, *args, **kwargs):
-        avg_time = (time.time() - self.start) / self.num_runs
-        print("Среднее время выполнения %.f" % (avg_time * 1_000_000), "мкс")
+    return decorator
 
-def res(param=1000):
-    """функция для проверки работы декоратора"""
-    for i in range(1, param):
-        a = i**2
-
-with Timing(res, NUM_RUNS) as ts:
-    for i in range(NUM_RUNS):
-        res()
+@time_this(num_runs=10)
+def f():
+    for j in range(1000000):
+        pass
+f()
